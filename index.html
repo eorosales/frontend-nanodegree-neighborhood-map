@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<!--
+
+Thing to Not Be Handled By Knockout
+- anything the Maps API is used for
+- creating markers
+- tracking click events on markers
+- making the map
+- refreshing the map
+
+* Tracking click events on list items SHOULD be handled by Knockout
+* Creating markers as part of the ViewModel is allowed (not as Knockout observables)
+
+Coffee and cafe locations
+
+-->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Neighborhood Map</title>
+  <link rel="stylesheet" href="css/main.css">
+
+</head>
+<body>
+
+  <header class="header">
+    <h1>Neighborhood Map Application Project</h1>
+  </header>
+
+  <div class="list-container">
+    <input type="search" id="search">
+    <ul data-bind="foreach: place">
+      <li>
+        <span data-bind="text: $data.name"></span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="map" id="map"></div>
+
+<!-- Scripts -->
+  <script
+  src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0JYtazwxDTobGJAfb81nNWuIQ_K7-2ao&callback=initMap" type="text/javascript"></script>
+  <script src="js/knockout.js"></script>
+  <script src="js/app.js"></script>
+
+
+</body>
+</html>
