@@ -1,12 +1,42 @@
+main {
+  background-color: rgba(31, 45, 61, .95);
+  position: fixed;
+    top: 0;
+    left: 0;
+  max-width: 15%;
+  min-height: 100%;
+  padding: 20px;
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  color: #fff;
+  text-align: right;
+}
+
+main h1 {
+  color: #fff;
+  margin: 0;
+  padding: .2em;
+}
+
+main input {
+  margin-top: 2.2em;
+}
+
+main .list-container {
+  text-decoration: none;
+}
+
+main .list-container ul li {
+  text-decoration: none;
+  list-style: none;
+  font-size: 1.2em;
+  line-height: 2.2em;
+}
+
 .map {
   width: 100%;
   padding-bottom: 100%;
+  position: absolute;
+    top: 0;
+    left: 0;
   z-index: -9999;
-}
-
-.list-container {
-  width: 20%;
-  height: 100%;
-  outline: 1px dashed red;
-  z-index: 9999;
 }

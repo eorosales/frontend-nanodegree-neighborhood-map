@@ -22,23 +22,31 @@ Coffee and cafe locations
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Neighborhood Map</title>
+  <link href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 
 </head>
 <body>
 
-  <header class="header">
-    <h1>Neighborhood Map Application Project</h1>
-  </header>
+  <main class="container">
 
-  <div class="list-container">
+    <h1>Neighborhood Map Project</h1>
+
     <input type="search" id="search">
-    <ul data-bind="foreach: place">
-      <li>
-        <span data-bind="text: $data.name"></span>
-      </li>
-    </ul>
-  </div>
+
+    <div class="list-container">
+      <ul data-bind="foreach: place">
+        <li>
+          <span data-bind="text: $data.name"></span>
+        </li>
+      </ul>
+    </div>
+
+    <footer class="footer">
+      <p>Udacity | Frontend Nanodegree | Project 5</p>
+    </footer>
+
+  </main>
 
   <div class="map" id="map"></div>
 

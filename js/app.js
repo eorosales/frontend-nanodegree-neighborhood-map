@@ -4,7 +4,7 @@ function initMap() {
   // load map
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
-    center: {lat: 37.554417, lng: -121.980696}
+    center: {lat: 37.5327193, lng: -121.9593492}
   });
   ko.applyBindings(new neighborhoodAppViewModel());
 }
