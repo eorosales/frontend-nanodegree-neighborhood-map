@@ -3,18 +3,19 @@ main {
   position: fixed;
     top: 0;
     left: 0;
-  max-width: 15%;
+  max-width: 300px;
   min-height: 100%;
-  padding: 20px;
+  /*padding: 20px;*/
   font-family: 'Barlow Semi Condensed', sans-serif;
   color: #fff;
-  text-align: right;
+  text-align: center;
 }
 
 main h1 {
   color: #fff;
   margin: 0;
-  padding: .2em;
+  padding: 1em;
+  padding-bottom: .3em;
 }
 
 main input {
@@ -28,8 +29,14 @@ main .list-container {
 main .list-container ul li {
   text-decoration: none;
   list-style: none;
+  margin: 2em 0;
   font-size: 1.2em;
-  line-height: 2.2em;
+  text-indent: -40px;
+}
+
+main .list-container ul li:hover {
+  color: #F95F62;
+  cursor: pointer;
 }
 
 .map {
