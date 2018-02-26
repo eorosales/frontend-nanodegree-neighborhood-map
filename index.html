@@ -26,26 +26,24 @@ Coffee and cafe locations
   <link rel="stylesheet" href="css/main.css">
 
 </head>
-<body>
+<body class="container">
 
-  <main class="container">
+  <main class="places">
+      <h1>Neighborhood Map Project</h1>
 
-    <h1>Neighborhood Map Project</h1>
+      <input type="search" id="input" data-bind="event: { keyup : filterList }" placeholder="Enter cafe name here">
 
-    <input type="search" id="search" placeholder="Enter cafe name here">
+      <div class="list-container">
+        <ul data-bind="foreach: place">
+          <li>
+            <span data-bind="text: $data.name"></span>
+          </li>
+        </ul>
+      </div>
 
-    <div class="list-container">
-      <ul data-bind="foreach: place">
-        <li>
-          <span data-bind="text: $data.name"></span>
-        </li>
-      </ul>
-    </div>
+      <footer class="footer">
 
-    <footer class="footer">
-      <p>Udacity | Frontend Nanodegree | Project 5</p>
-    </footer>
-
+      </footer>
   </main>
 
   <div class="map" id="map"></div>

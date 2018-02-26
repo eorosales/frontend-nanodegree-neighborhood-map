@@ -3,8 +3,9 @@ var map;
 function initMap() {
   // load map
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: {lat: 37.5327193, lng: -121.9593492}
+    zoom: 13,
+    center: {lat: 37.548271, lng:-121.988571},
+    disableDefaultUI: true
   });
   ko.applyBindings(new neighborhoodAppViewModel());
 }
@@ -12,7 +13,8 @@ function initMap() {
 var neighborhoodAppViewModel = function() {
   'use strict';
   var self = this;
-  var data = [
+
+  self.data = [
     {
       "name": "Devout Coffee",
       "lat": 37.577225,
@@ -44,23 +46,39 @@ var neighborhoodAppViewModel = function() {
       "id": "ChIJJQ32j83Aj4ARvHLRh6S4xhc"
     }
   ]
-
   self.place = ko.observableArray();
   self.markers = ko.observableArray();
 
-  // Push each object from data into a ko.observableArray()
-  for(var i = 0; i < data.length; i++) {
-    self.place.push(data[i]);
+  // Push each object from self.data into a ko.observableArray()
+  for(var i = 0; i < self.data.length; i++) {
+    self.place.push(self.data[i]);
   }
 
+  // Create markers based on number of objects in self.place() array
   for(var j = 0; j < self.place().length; j++) {
-    // Create markers based on number of objects in self.place() array
-    var markers = new google.maps.Marker({
+    var marker = new google.maps.Marker({
       position: {
         lat: self.place()[j].lat,
         lng: self.place()[j].lng
       },
       map: map
     });
+    self.markers().push(marker[j]);
+  }
+
+  self.filterList = function() {
+    self.place.removeAll();
+    var input, target, filter, k;
+        input = document.getElementById('input');
+        target = document.getElementsByTagName('li');
+        filter = input.value.toUpperCase();
+
+    for(k = 0; k < self.data.length; k++) {
+      var name = self.data[k].name.toUpperCase();
+      if(name.indexOf(filter) > -1) {
+        self.place.push(self.data[k]);
+      }
+    }
+    return true;
   }
 }
