@@ -1,4 +1,5 @@
 var map;
+var markers = [];
 
 function initMap() {
   // load map
@@ -10,8 +11,13 @@ function initMap() {
   ko.applyBindings(new neighborhoodAppViewModel());
 }
 
+
+
+
 var neighborhoodAppViewModel = function() {
+
   'use strict';
+
   var self = this;
 
   self.data = [
@@ -47,38 +53,49 @@ var neighborhoodAppViewModel = function() {
     }
   ]
   self.place = ko.observableArray();
-  self.markers = ko.observableArray();
-
-  // Push each object from self.data into a ko.observableArray()
-  for(var i = 0; i < self.data.length; i++) {
+    for(var i = 0; i < self.data.length; i++) {
     self.place.push(self.data[i]);
   }
-
-  // Create markers based on number of objects in self.place() array
-  for(var j = 0; j < self.place().length; j++) {
-    var marker = new google.maps.Marker({
-      position: {
-        lat: self.place()[j].lat,
-        lng: self.place()[j].lng
-      },
-      map: map
-    });
-    self.markers().push(marker[j]);
-  }
-
-  self.filterList = function() {
-    self.place.removeAll();
-    var input, target, filter, k;
-        input = document.getElementById('input');
-        target = document.getElementsByTagName('li');
+  self.initMarkers = (function() {
+    // Initialize all markers once based on total number of objects in self.place() array
+    for(var j = 0; j < self.place().length; j++) {
+      var marker = new google.maps.Marker({
+        position: {
+          lat: self.place()[j].lat,
+          lng: self.place()[j].lng
+        },
+        map: map
+      });
+      markers.push(marker[j]);
+    }
+  }());
+  self.filterPlaces = function() {
+    self.place.removeAll(); // clear ko.observableArray to empty list
+    // Declare all necessary vars for filtering list and markers
+    var input, target, filter, k, m, name, marker, lat, lng;
+        input = document.getElementById('input'); // select input box
+        target = document.getElementsByTagName('li'); // select items to be filtered
         filter = input.value.toUpperCase();
 
+    // Filter text list
     for(k = 0; k < self.data.length; k++) {
-      var name = self.data[k].name.toUpperCase();
+      name = self.data[k].name.toUpperCase();
       if(name.indexOf(filter) > -1) {
         self.place.push(self.data[k]);
+
+
+        // Filter markers
+        lat = self.data[k].lat;
+        lng = self.data[k].lng;
+        marker = new google.maps.Marker({
+          position: {
+            lat: lat,
+            lng: lng
+          },
+          map: map
+        });
       }
     }
     return true;
-  }
+    }
 }
