@@ -1,9 +1,10 @@
 var map;
+var marker;
 var markers = [];
 
 function initMap() {
   // load map
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById("map"), {
     zoom: 13,
     center: {lat: 37.548271, lng:-121.988571},
     disableDefaultUI: true
@@ -11,14 +12,14 @@ function initMap() {
   ko.applyBindings(new neighborhoodAppViewModel());
 }
 
-
-
-
 var neighborhoodAppViewModel = function() {
 
-  'use strict';
+  "use strict";
 
   var self = this;
+  var infowindow = new google.maps.InfoWindow({
+    content: 'test success'
+  });
 
   self.data = [
     {
@@ -52,50 +53,49 @@ var neighborhoodAppViewModel = function() {
       "id": "ChIJJQ32j83Aj4ARvHLRh6S4xhc"
     }
   ]
-  self.place = ko.observableArray();
+  // Populate markers array on load
+  self.fillMarkersArr = (function() {
+    var lat, lng;
     for(var i = 0; i < self.data.length; i++) {
-    self.place.push(self.data[i]);
-  }
-  self.initMarkers = (function() {
-    // Initialize all markers once based on total number of objects in self.place() array
-    for(var j = 0; j < self.place().length; j++) {
-      var marker = new google.maps.Marker({
-        position: {
-          lat: self.place()[j].lat,
-          lng: self.place()[j].lng
-        },
-        map: map
+      lat = self.data[i].lat;
+      lng = self.data[i].lng;
+      marker = new google.maps.Marker({
+        position: {lat, lng},
+        animation: google.maps.Animation.DROP // Set drop animation for markers on load
       });
-      markers.push(marker[j]);
+    marker.addListener('click', function() {
+      infowindow.open(map, this);
+    })
+    marker.setMap(map);
+    markers.push(marker);
     }
   }());
+  // Populate markers array as a ko.observableArray
+  self.markersObservableArr = ko.observableArray();
+  // Populate self.markersObservableArr with data objects for each place
+  for(var i = 0; i < self.data.length; i++) {
+    self.markersObservableArr.push(self.data[i]);
+  }
+  // Dynamically filter list of place names and
+  // their associated markers based on user's input
   self.filterPlaces = function() {
-    self.place.removeAll(); // clear ko.observableArray to empty list
+    self.markersObservableArr.removeAll(); // Clears list of names in VIEW
     // Declare all necessary vars for filtering list and markers
-    var input, target, filter, k, m, name, marker, lat, lng;
-        input = document.getElementById('input'); // select input box
-        target = document.getElementsByTagName('li'); // select items to be filtered
-        filter = input.value.toUpperCase();
+    var input, filter, name;
+        input = document.getElementById("input"); // select input box
+        filter = input.value.toUpperCase(); // grab value of input
 
-    // Filter text list
-    for(k = 0; k < self.data.length; k++) {
-      name = self.data[k].name.toUpperCase();
+    // Filter list of place names and markers dynamically based on user's text input
+    for(var j = 0; j < self.data.length; j++) {
+      markers[j].setMap(null); // Remove all visible markers on map
+      name = self.data[j].name.toUpperCase();
       if(name.indexOf(filter) > -1) {
-        self.place.push(self.data[k]);
-
-
-        // Filter markers
-        lat = self.data[k].lat;
-        lng = self.data[k].lng;
-        marker = new google.maps.Marker({
-          position: {
-            lat: lat,
-            lng: lng
-          },
-          map: map
-        });
+        // Push objects with matching "name" properties as objects into observableArray
+        self.markersObservableArr.push(self.data[j]);
+        markers[j].setMap(map);
       }
     }
+    // Filter markers depending on list of place names
     return true;
     }
 }

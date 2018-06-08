@@ -16,6 +16,7 @@ Coffee and cafe locations
 
 -->
 
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -34,7 +35,7 @@ Coffee and cafe locations
       <input type="search" id="input" data-bind="event: { keyup : filterPlaces }" placeholder="Enter cafe name here">
 
       <div class="list-container">
-        <ul data-bind="foreach: place">
+        <ul data-bind="foreach: markersObservableArr">
           <li>
             <span data-bind="text: $data.name"></span>
           </li>
