@@ -1,6 +1,6 @@
-var map;
-var marker;
+var map, marker;
 var markers = [];
+var placeList = [];
 
 function initMap() {
   // load map
@@ -12,14 +12,11 @@ function initMap() {
   ko.applyBindings(new neighborhoodAppViewModel());
 }
 
-var neighborhoodAppViewModel = function() {
-
+function neighborhoodAppViewModel() {
   "use strict";
 
   var self = this;
-  var infowindow = new google.maps.InfoWindow({
-    content: 'test success'
-  });
+  var infowindow = new google.maps.InfoWindow();
 
   self.data = [
     {
@@ -53,31 +50,46 @@ var neighborhoodAppViewModel = function() {
       "id": "ChIJJQ32j83Aj4ARvHLRh6S4xhc"
     }
   ]
-  // Populate markers array on load
-  self.fillMarkersArr = (function() {
-    var lat, lng;
+  self.Place = (function(name, lat, lng, id) {
+    this.name = name,
+    this.lat = lat,
+    this.lng = lng,
+    this.id = id;
+  });
+  self.placeList = (function() {
     for(var i = 0; i < self.data.length; i++) {
-      lat = self.data[i].lat;
-      lng = self.data[i].lng;
-      marker = new google.maps.Marker({
-        position: {lat, lng},
-        animation: google.maps.Animation.DROP // Set drop animation for markers on load
-      });
-    marker.addListener('click', function() {
-      infowindow.open(map, this);
-    })
-    marker.setMap(map);
-    markers.push(marker);
+      var places = new self.Place(self.data[i].name, self.data[i].lat, self.data[i].lng, self.data[i].id);
+      placeList.push(places);
     }
   }());
-  // Populate markers array as a ko.observableArray
+  self.marker = (function() {
+    var lat, lng, pos;
+    // var bounds = new google.maps.LatLngBounds();
+    for(var j = 0; j < placeList.length; j++) {
+      lat = placeList[j].lat;
+      lng = placeList[j].lng;
+      pos = {lat, lng};
+      marker = new google.maps.Marker({
+        position: pos,
+        title: placeList[j].name,
+        id: placeList[j].id
+      })
+      marker.setMap(map);
+      // Push marker into array of markers
+      markers.push(marker);
+      // bounds.extend(marker.position);
+      marker.addListener('click', function() {
+        self.infowindowData(this, infowindow);
+      })
+    }
+    // map.fitBounds(bounds);
+  }());
   self.markersObservableArr = ko.observableArray();
-  // Populate self.markersObservableArr with data objects for each place
-  for(var i = 0; i < self.data.length; i++) {
-    self.markersObservableArr.push(self.data[i]);
-  }
-  // Dynamically filter list of place names and
-  // their associated markers based on user's input
+  self.pushMarkersObservableArr = (function() {
+    for(var i = 0; i < self.data.length; i++) {
+      self.markersObservableArr.push(self.data[i]);
+    }
+  }())
   self.filterPlaces = function() {
     self.markersObservableArr.removeAll(); // Clears list of names in VIEW
     // Declare all necessary vars for filtering list and markers
@@ -98,4 +110,27 @@ var neighborhoodAppViewModel = function() {
     // Filter markers depending on list of place names
     return true;
     }
+  self.infowindowData = function (marker, infowindow) {
+    // Ajax request to Foursquare
+    var foursquare = $.ajax({
+      method: 'GET',
+      url: "https://api.foursquare.com/v2/venues/search?",
+      dataType: 'json',
+      data: 'client_id=NEUORKAG245XLYEPTJRLI31AE4UJH0BRUKA3FZJFJOPVHGMW' +
+            '&client_secret=Q5AUJAPD2OOZO3EXLWPOTQPZVUX4ML3G15JQYLHSQUO24K15' +
+            '&near=Fremont,CA' +
+            '&v=20180609' +
+            '&limit=1'
+    })
+    // Check to see if associated marker has infowindow open
+    if(infowindow.marker != marker) {
+      infowindow.marker = marker;
+      infowindow.setContent('<div>' + marker.title + '</div>');
+      infowindow.open(map, marker);
+      // Clear property marker
+      infowindow.addListener('closeclick', function() {
+        infowindow.setMarker(null);
+      })
+    }
+  }
 }
