@@ -37,7 +37,7 @@ Coffee and cafe locations
       <div class="list-container">
         <ul data-bind="foreach: markersObservableArr">
           <li>
-            <span data-bind="text: $data.name"></span>
+            <span data-bind="text: $data.name, click: $parent.listItemClick"></span>
           </li>
         </ul>
       </div>
