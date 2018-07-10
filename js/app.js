@@ -74,6 +74,7 @@ function neighborhoodAppViewModel() {
           lat: placeList[j].lat,
           lng: placeList[j].lng},
         title: placeList[j].name,
+        animation: null,
         id: placeList[j].id
       })
       marker.setMap(map);
@@ -115,32 +116,45 @@ function neighborhoodAppViewModel() {
     // Ajax request to Foursquare
     var xhr = $.ajax({
       method: 'GET',
-      url: "https://api.foursquare.com/v2/venues/search?near=Fremont,CA",
+      url: "https://api.foursquar.com/v2/venues/search?near=Fremont,CA",
       dataType: 'json',
       data: '&client_id=NEUORKAG245XLYEPTJRLI31AE4UJH0BRUKA3FZJFJOPVHGMW' +
             '&client_secret=Q5AUJAPD2OOZO3EXLWPOTQPZVUX4ML3G15JQYLHSQUO24K15' +
             '&query=' + name +
             '&v=20180609' +
             '&limit=1',
-      async: true,
+      async: true
+      })
       // When AJAX request is succesful, populate infowindow with associated
       // place information provided by Foursquare API
-      success: function() {
+      .done(function() {
         var info = JSON.parse(xhr.responseText).response.venues[0];
         var infoName = info.name;
         var infoCategory = info.categories[0].name;
         var infoAddress = info.location.formattedAddress[0] + '<br>' + info.location.formattedAddress[1] + '<br>' + info.location.formattedAddress[2];
-        infowindow.setContent('<h3>' + infoName + '</h3> <div>' + infoAddress + '</div><p><i>--' + infoCategory + '--</i></p>');
-        console.log(info);
+        infowindow.setContent('<h3>' + infoName + '</h3> <div>' + infoAddress + '</div><p><i>Category: ' + infoCategory + '</i></p>');
+        infowindow.open(map, marker);
+      })
+      // If AJAX request fails, notify the user of the error and what to do
+      .fail(function() {
+        infowindow.setContent('<h1>Do\'\h!</h1> There was an error in communicating with Fourquare.<br>Please contact site admin to resolve issue.');
+      })
+    // Enable BOUNCE animation if marker is clicked or
+    // associated list item is clicked
+    for(var j = 0; j < markers.length; j++) {
+      if(markers[j].getAnimation() !== null) {
+        markers[j].setAnimation(null);
       }
-    })
+    }
+    marker.setAnimation((google.maps.Animation.BOUNCE));
     // Check to see if associated marker has infowindow open
     if(infowindow.marker != marker) {
       infowindow.marker = marker;
       infowindow.open(map, marker);
-      // Clear property marker
+      // Close infowindow by clicking 'x'
       infowindow.addListener('closeclick', function() {
-        infowindow.setMarker(null);
+        infowindow.close();
+        marker.setAnimation(null);
       })
     }
   }
