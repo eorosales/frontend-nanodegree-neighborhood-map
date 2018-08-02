@@ -1,22 +1,5 @@
 <!DOCTYPE html>
 
-<!--
-
-Thing to Not Be Handled By Knockout
-- anything the Maps API is used for
-- creating markers
-- tracking click events on markers
-- making the map
-- refreshing the map
-
-* Tracking click events on list items SHOULD be handled by Knockout
-* Creating markers as part of the ViewModel is allowed (not as Knockout observables)
-
-Coffee and cafe locations
-
--->
-
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -29,7 +12,10 @@ Coffee and cafe locations
 </head>
 <body class="container">
 
-  <main class="places">
+  <span class="open-button" onclick="openNav()">&#9776;</span>
+
+  <main class="places" id="places">
+      <span class="close-button" onclick="closeBtn()">close X</span>
       <h1>Neighborhood Map Project</h1>
 
       <input type="search" id="input" data-bind="event: { keyup : filterPlaces }" placeholder="Enter cafe name here">
@@ -43,7 +29,7 @@ Coffee and cafe locations
       </div>
 
       <footer class="footer">
-
+        <p>Location detials provided by Foursquare API</p>
       </footer>
   </main>
 

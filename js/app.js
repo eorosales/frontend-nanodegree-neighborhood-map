@@ -19,9 +19,9 @@ function neighborhoodAppViewModel() {
   var self = this;
   var marker;
   var Place = (function(name, lat, lng, id) {
-    this.name = name,
-    this.lat = lat,
-    this.lng = lng,
+    this.name = name;
+    this.lat = lat;
+    this.lng = lng;
     this.id = id;
   });
   var placeList = [];
@@ -78,9 +78,9 @@ function neighborhoodAppViewModel() {
         id: placeList[j].id
       })
       marker.setMap(map);
-      // Push marker into array of markers
+      // Push marker into markers array
       markers.push(marker);
-      marker.addListener('click', function() {
+      marker.addListener("click", function() {
         infowindow.setContent(null);
         self.infowindowData(this, infowindow, this.title);
       })
@@ -113,16 +113,16 @@ function neighborhoodAppViewModel() {
     return true;
     }
   self.infowindowData = function (marker, infowindow, name) {
-    // Ajax request to Foursquare
+    // Ajax request to Foursquare API
     var xhr = $.ajax({
-      method: 'GET',
-      url: "https://api.foursquar.com/v2/venues/search?near=Fremont,CA",
-      dataType: 'json',
-      data: '&client_id=NEUORKAG245XLYEPTJRLI31AE4UJH0BRUKA3FZJFJOPVHGMW' +
-            '&client_secret=Q5AUJAPD2OOZO3EXLWPOTQPZVUX4ML3G15JQYLHSQUO24K15' +
-            '&query=' + name +
-            '&v=20180609' +
-            '&limit=1',
+      method: "GET",
+      url: "https://api.foursquare.com/v2/venues/search?near=Fremont,CA",
+      dataType: "json",
+      data: "&client_id=NEUORKAG245XLYEPTJRLI31AE4UJH0BRUKA3FZJFJOPVHGMW" +
+            "&client_secret=Q5AUJAPD2OOZO3EXLWPOTQPZVUX4ML3G15JQYLHSQUO24K15" +
+            "&query=" + name +
+            "&v=20180609" +
+            "&limit=1",
       async: true
       })
       // When AJAX request is succesful, populate infowindow with associated
@@ -131,13 +131,14 @@ function neighborhoodAppViewModel() {
         var info = JSON.parse(xhr.responseText).response.venues[0];
         var infoName = info.name;
         var infoCategory = info.categories[0].name;
-        var infoAddress = info.location.formattedAddress[0] + '<br>' + info.location.formattedAddress[1] + '<br>' + info.location.formattedAddress[2];
-        infowindow.setContent('<h3>' + infoName + '</h3> <div>' + infoAddress + '</div><p><i>Category: ' + infoCategory + '</i></p>');
+        var infoAddress = info.location.formattedAddress[0] + "<br>" + info.location.formattedAddress[1] + "<br>" + info.location.formattedAddress[2];
+        infowindow.setContent("<h3>" + infoName + "</h3> <div>" + infoAddress + "</div><p><i>Category: " + infoCategory + "</i></p>");
         infowindow.open(map, marker);
+        console.log(info);
       })
       // If AJAX request fails, notify the user of the error and what to do
       .fail(function() {
-        infowindow.setContent('<h1>Do\'\h!</h1> There was an error in communicating with Fourquare.<br>Please contact site admin to resolve issue.');
+        infowindow.setContent("<h1>Do\'\h!</h1> There was an error in communicating with Fourquare.<br>Please contact site admin to resolve issue.");
       })
     // Enable BOUNCE animation if marker is clicked or
     // associated list item is clicked
@@ -152,8 +153,9 @@ function neighborhoodAppViewModel() {
       infowindow.marker = marker;
       infowindow.open(map, marker);
       // Close infowindow by clicking 'x'
-      infowindow.addListener('closeclick', function() {
+      infowindow.addListener("closeclick", function() {
         infowindow.close();
+        infowindow.setContent(" ");
         marker.setAnimation(null);
       })
     }
@@ -164,8 +166,17 @@ function neighborhoodAppViewModel() {
     var listItem = this.name;
     for(var i = 0; i < markers.length; i++) {
       if(listItem == markers[i].title) {
+        infowindow.setContent(" ");
         self.infowindowData(markers[i], infowindow, markers[i].title);
       }
     }
   }
+}
+
+function openNav() {
+  document.getElementById("places").style.left = "0px";
+}
+
+function closeBtn() {
+  document.getElementById("places").style.left = "-310px";
 }

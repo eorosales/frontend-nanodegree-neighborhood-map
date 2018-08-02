@@ -1,11 +1,12 @@
 .container {
+  width: 100%;
   margin: 0;
   padding: 0;
   color: #333;
   font-family: "Barlow Semi Condensed", sans-serif;
   z-index: 0; }
   .container .places {
-    width: 200px;
+    min-width: 15%;
     text-align: right;
     color: #fff;
     position: fixed;
@@ -13,13 +14,30 @@
     background-color: #1f2d3d;
     padding: 20px;
     padding-top: 0px;
-    z-index: 9999; }
+    z-index: 2; }
+@media(max-width: 740px) {
+  .container .places {
+    transition: 0.3s;
+    left: -190px;
+    width: 150px; } }
+    .container .places .close-button {
+      position: fixed;
+      margin-left: 2000px; }
+@media(max-width: 740px) {
+  .container .places .close-button {
+    margin-left: 0;
+    color: #fff;
+    position: relative;
+      position-top: 20px;
+    font-size: 20px;
+    margin-top: 20px; } }
     .container .places h1 {
-      font-size: 2em; }
+      font-size: 1.6em; }
     .container .places input {
       text-align: right;
-      padding: 10px 0;
-      width: 200px; }
+      color: #fff;
+      margin: 10px 0;
+      width: auto; }
     .container .places .list-container ul li {
       font-size: 1.2em;
       text-decoration: none;
@@ -31,10 +49,20 @@
         cursor: pointer; }
       .container .places .list-container ul li:active {
         color: #e4304b; }
+    .container .places .footer {
+      font-size: 0.8em;
+      padding-top: 5vh; }
+  .container .open-button {
+    position: fixed;
+      position-left: 0px;
+      position-top: 0px;
+    padding: 5px;
+    margin: 0;
+    z-index: 2; }
   .container .map {
+    position: fixed;
     width: 100vw;
     height: 100vh;
     margin: 0;
-    padding: 0; }
-
-/*# sourceMappingURL=main.css.map */
+    padding: 0;
+    z-index: 1; }
